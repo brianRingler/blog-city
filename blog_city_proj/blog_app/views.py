@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils.translation import activate
-from .models import User, ContactInfo, Address, Post, Comment
+from .models import User, ContactInfo, Address, Post, Comment, Topic
 from django.contrib import messages
 from django.http import JsonResponse
 import bcrypt
@@ -18,7 +18,14 @@ def index_view(request):
 
 
 def blog_view(request):
-    return render(request, 'blog.html')
+
+    topic = request.session['topic_selected'] = False
+    context = {
+        'topics' : Topic.objects.all(),
+        'topic_selected' : topic,
+    }
+
+    return render(request, 'blog.html', context)
 
 
 def register_view(request):
@@ -85,9 +92,6 @@ def login_view(request):
         if len(errors) > 0:
             for k, v in errors.items():
                 messages.error(request, v)  
-
-            print('**----****--***---***---')
-            print(errors)
             # return JsonResponse(errors, status=200) 
             return redirect('/login')
 
@@ -103,7 +107,6 @@ def login_view(request):
         request.session['active_user_last'] = active_user[0].last_name
         # request.session['active_user_picture'] = active_user[0].picture
         # no errors - user logged in
-        print('NO ERRORS----++++++')
         return render(request, 'index.html', context)
 
 
@@ -195,3 +198,39 @@ def profile_update(request):
     return render(request, 'user_profile.html')
     pass
 
+
+def add_topic(request):
+    '''Allow user to create a new topic that will be assigned to them.
+    Check if there is an active user to prevent error if not active user '''
+    if request.method == 'POST' and request.session['logged_in'] == True:
+        errors = Topic.objects.validation_topic(request.POST)
+        if len(errors) > 0:
+            for k, v in errors.items():
+                messages.error(request, v)   
+            return redirect('/blog-about')
+
+        Topic.objects.create(
+                topic = request.POST.get('topic-nm', None),
+                user = User.objects.get(id=request.session['active_user_id']),
+        )
+            
+        return redirect('/blog-about')
+    
+    # should not happen    
+    return redirect('/blog-about')
+
+def blog_about_topic(request, topic_str):
+
+    topic = request.session['topic_selected'] = True
+
+    posts_by_topic = Post.objects.filter(topic__topic=topic_str).order_by('created_at')
+
+    comments_by_post = Comment.objects.filter(topic__topic=topic_str).order_by('-created_at')
+
+    context = {
+        'selected_topic' : Topic.objects.get(topic=topic_str),
+        'topic_selected' : topic,
+        'posts_by_topic' : posts_by_topic,
+        'comments_by_post' : comments_by_post
+    }
+    return render(request, 'blog.html', context)

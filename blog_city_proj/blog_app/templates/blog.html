@@ -10,37 +10,79 @@
 
 {% block content %}
 
-<div class="wrapper-blog">  
+<div class="wrapper-blog">
+    <ul class="error-msgs" >
+        {% if messages %}
+            {% for message in messages %}
+                <li {% if message.tags %} class"{{message.tags}}"{% endif %}>{{message}}</li>
+            {% endfor %}
+        {% endif %}
+    </ul>  
     <div class="left-side-bar">
-        <form action="/add-topics/" method="POST" name="left-side-bar-topics-nm">    
+        <form action="/add-topic/" method="POST" name="left-side-bar-topics-nm"> 
+            {% csrf_token %}   
             <h4>Blog Topics</h4>
-            <p>Machine Learning</p>
-            <p>Learning on The Tube</p>
-            <p>C++</p>
-            <p>JavaScript</p>
-            <p>Python</p>
-            <p>Java</p>
-            <p>Pandas</p>
-            <p>Django</p>
-            <p>Blockchain</p>
+            {% for topic in topics %}
+                <p><a href="topic/{{ topic.topic }}">{{ topic.topic }}</a></p>
+            {% endfor %}
             <div class=left-frm-controls>
                 <label for="add-topic">Add Topic</label>
-                <input type="text" id="add-topic" name="topic-nm">
+                <input type="text" id="add-topic" name="topic-nm" placeholder="Will Ferrell movies..." required>
                 <input type="submit" name="submit-topic-btn" value="Submit">
             </div>
         </form> 
     </div>
 
     <div class="blog-sec">
-        <h1 class="welcome-blog">Lets Blog</h1>
-        <div class="post">
-            <div class="posts">
-                <p>Posts</p>
-                <div class="comments">
-                    <p>Comments</p>
-                </div>
+        {% if topic_selected == True %}
+            <h1 class="welcome-blog">Blog About: {{ selected_topic.topic }}</h1>
+            <div class="post-wrapper">
+                <form action="#" method="POST" name="post-comment-frm">
+                    {% csrf_token %}
+                    
+                    <!-- Add Post section -->
+                    <div class="post-msg">
+                        <label for="add-post-msg">Add a Post</label>
+                        <textarea name="add-post-msg-nm" id="add-post-msg" cols="30" rows="10"></textarea>
+                        <input type="submit" name="add-post-submit" value="Add Post">
+                    </div> 
+                    
+                    <!-- The Post -->
+                    {% for posts in posts_by_topic %}
+                        <div class="post-header">
+                            <p class="post-name-date">
+                                <span class="poster-name">
+                                    {{ posts.user.first_name }} 
+                                    {{ posts.user.first_name}}</span>
+                                <span class="post-date">{{ posts.create_at }}</span>
+                            </p>
+                            <P class="post-text">{{ posts.post }}</P>
+                        </div>
+                        
+                        <!-- All comments related to POST -->
+                        {% for comment in comments_by_post %}
+                            <div class="msg-comment">
+                                <p class="comment-name-date">
+                                    <span class="comment-name">{{ comment.user.first_name }} {{ comment.user.last_name}}</span>
+                                    <span class="comment-date">{{ comment.created_at}}</span>
+                                    <input type="submit" name="remove-comment-submit" value="Remove">
+                                </p>
+                                <p class="comment-text"> comment.comment </p>
+                            </div>
+                        {% endfor %}
+                        <!-- Add New Comment  -->
+                        <div class="comment-msg">
+                            <label for="add-comment-msg">Add a Comment</label>
+                            <textarea name="add-comment-msg-nm" id="add-comment-msg" cols="30" rows="10"></textarea>
+                            <input type="submit" name="add-comment-submit" value="Add Comment">
+                        </div> 
+                    {% endfor %}
+                </form>
             </div>
-        </div>
+        {% else %}
+            <h1 class="welcome-blog">Lets Blog</h1>
+            <h2 class="welcome-blog">Select a Topic</h2>
+        {% endif %}
     </div>
 
     <div class="right-side-bar">

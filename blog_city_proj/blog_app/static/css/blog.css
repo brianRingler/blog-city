@@ -5,8 +5,35 @@
     /* outline: 1px dotted rgb(234, 0, 255); */
 }
 
+/* Error message from Django*/
+.error-msgs {
+    position: absolute;
+    top: 65px;
+    left: 45px;
+  }
+  
+  .error-msgs > li {
+    background-color: white;
+    padding: 10px 10px;
+    color: red;
+  }
+ 
+  .blink {
+      animation: blinker 4s linear infinite;
+      margin-left: 350px;
+      color: red;
+      font-weight: bold;
+      font-size: 15px;
+    }
+    
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+ /* end error messages*/
 
-/* @-webkit-keyframes changeBackground 
+@-webkit-keyframes changeBackground 
     {
         0%   {background-image: url("/static/img/city-1.jpg");}
         15%   {background-image: url("/static/img/city-2.jpg");}
@@ -22,11 +49,11 @@ body {
     -webkit-animation-duration: 300s;
     -webkit-box-direction: alternate;
     animation-iteration-count: infinite;
-} */
+}
 
 
 .wrapper-blog {
-    /* background: rgba(204,230,255,1); */
+    color: whitesmoke;
     min-height: 100vh; 
     display: grid;
     grid-template-columns: 325px auto 200px;
@@ -35,9 +62,14 @@ body {
             "left   center   right";
 }
 
+
 .welcome-blog {
     font-family: 'ZCOOL KuaiLe', cursive;
     font-size: 8rem;
+    color: rgb(10, 32, 143);
+	-webkit-text-stroke: 3px rgb(10, 32, 143);
+	-webkit-text-fill-color: whitesmoke;
+
 }
 
 
@@ -54,6 +86,7 @@ body {
     padding: 10px 10px;
 }
 
+
 .left-frm-controls {
     display: flex;
     flex-flow: column wrap;
@@ -68,14 +101,27 @@ form[name="left-side-bar-topics-nm"] {
     align-items: center;
 }
 
-h4, label {
+label {
     font-family: 'ZCOOL KuaiLe', cursive;
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 15px;
+}
+
+h4 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    columns: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }
 
 form[name="left-side-bar-topics-nm"] > p {
     font-weight: bold;
+    text-decoration: none;
     margin-bottom: 10px;
 }
 
@@ -115,36 +161,30 @@ label {
 }
 
 input[type="text"], 
-textarea, 
-select  {
+textarea  {
     border-radius: 5px;
     border: 2px solid rgba(49, 60, 117, 0.239);
     padding: 6px 12px;
     margin-bottom: 20px;
     height: 2.25rem;
     width: 16rem;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
     resize: vertical;
   }
 
-  textarea {
-      height: 5rem;
-  }
   
   input[type="text"]:focus, 
-  textarea:focus, 
-  select:focus {
+  textarea:focus {
     background-color: rgba(204,230,255,1);
     /* offset-x | offset-y | blur-rad | color */
     box-shadow: 5px -5px 5px #555 inset;
   }
 
 
-/*  Buttons */
-input[type="submit"],
-button {   
+/*  Buttons Side BARS */
+input[type="submit"] {   
     height: 2rem;
     width: 6rem;
     font-size: 1rem;
@@ -160,4 +200,113 @@ input[type="submit"]:hover {
     color: rgba(10, 32, 143);
     border: 2px solid rgb(10, 32, 143);
     background: rgba(235, 235, 240, 0.548);
+}
+
+
+/* FORM SECTION */
+.post-header, 
+.msg-comment {
+    height: 10rem;
+    width: 55rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: rgba(245, 245, 245, 0.842);
+    margin-bottom: 20px;
+    padding: 10px 10px;
+    color: rgb(10, 32, 143);
+}
+
+
+/* Make the comment section a little smaller than post and indent */
+.msg-comment {
+    width: 50rem;
+    margin-left: 5rem;
+}
+
+/* move label above add post\comment section */
+.post-msg, .comment-msg {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+}
+
+.post-msg {
+    margin: 2.5rem 0;
+}
+
+.comment-msg {
+    width: 50rem;
+    margin-left: 5rem;
+}
+
+#add-comment-msg {
+    width: 50rem;
+}
+
+
+.poster-name,
+.post-date {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.comment-name,
+.comment-date {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px 10px;
+}
+
+.post-text {
+    font-size: 1.10rem;
+    padding: 10px 10px;
+}
+
+.comment-text {
+    font-size: 1.10rem;
+    padding: 10px 10px;
+}
+
+
+input[name="add-post-submit"],
+input[name="add-comment-submit"],
+input[name="remove-comment-submit"]
+{   
+    height: 1.75rem;
+    width: 7rem;
+    font-size: .75rem;
+    font-weight: bold;
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: rgba(49, 60, 117, 0.239);
+    color: white;
+}
+
+input[name="add-post-submit"]:hover,
+input[name="add-comment-submit"]:hover 
+{
+    cursor: pointer;
+    color: rgba(10, 32, 143);
+    border: 2px solid rgb(10, 32, 143);
+    background: rgba(235, 235, 240, 0.548);
+}
+
+label {
+    font-size: 2.5rem;
+}
+
+textarea {
+    width: 55rem;
+    height: 5rem
+}
+
+input[name="add-post-submit"] {
+    margin-left: 765px;
+}
+
+input[name="remove-comment-submit"] {
+    margin-left: 315px;
 }

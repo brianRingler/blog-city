@@ -86,6 +86,14 @@ class ValidationManger(models.Manager):
         errors['log-email-nm'] = 'Password or email is not correct'
         return errors
 
+    def validation_topic(self, post_data):
+        '''Ensure the new topic is unique'''
+        errors = {}
+        new_topic = post_data['topic-nm']
+        if new_topic in Topic.objects.filter(topic=new_topic):
+            errors['topic-nm'] = f'{new_topic} is already a topic. Unique topics only'
+        return errors
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=25, null=False)
@@ -134,24 +142,37 @@ class Address(models.Model):
         return f'{self.user}, {self.street_name}, {self.state}'
 
 
+class Topic(models.Model):
+    topic = models.CharField(max_length=50, null=False)
+    user = models.ForeignKey(User, related_name="topics_user",on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = ValidationManger()
+
+    def __str__(self):
+        return f'{self.user}, {self.topic}'
+
+
 class Post(models.Model):
     post = models.TextField(max_length=2000, null=False)
     user = models.ForeignKey(User, related_name="posts_user",on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, related_name="posts_topic",on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}, {self.post}'
+        return f'{self.user}, {self.post}, {self.topic}'
 
 
 class Comment(models.Model):
     comment = models.TextField(max_length=2000, null=False)
     user = models.ForeignKey(User, related_name="comments_user",on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name="comment_posts",on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, related_name="comment_topic",on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}, {self.comment}'
+        return f'{self.user}, {self.comment}, {self.post}, {self.topic}'
 
-        
+
