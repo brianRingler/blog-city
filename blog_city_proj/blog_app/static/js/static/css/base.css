@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* outline: 1px dotted rgb(234, 0, 255); */
+}
+
+body {
+    /* position: relative; */
+    height: 100%;
+    font-family: 'Work Sans', sans-serif;
+    background: rgba(204,230,255,1);
+    color: rgb(10, 32, 143);
+}
+
+
+/* Input fields */
+label {
+    font-size: 25px;
+}
+
+input[type="file"],
+input[type="radio"] {
+    margin-bottom: 20px;
+}
+
+
+input[type="text"], 
+input[type="email"],
+input[type="date"],
+input[type="tel"],
+input[type="url"], 
+input[type="number"],
+input[type="password"],
+textarea, 
+select  {
+    border-radius: 15px;
+    border: 2px solid rgb(10, 32, 143,.5);
+    padding: 6px 12px;
+    margin-bottom: 20px;
+    height: 2.5rem;
+    width: 24rem;
+    font-size: 1.0rem;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
+  }
+
+  textarea {
+      height: 5rem;
+  }
+  
+  input[type="text"]:focus, 
+  input[type="email"]:focus,
+  input[type="date"]:focus, 
+  input[type="password"]:focus,
+  textarea:focus, 
+  select:focus {
+    background-color: rgba(204,230,255,1);
+    /* offset-x | offset-y | blur-rad | color */
+    box-shadow: 5px -5px 5px #555 inset;
+  }
+
+
+/*  Buttons */
+input[type="submit"],
+button {   
+    height: 2.85rem;
+    width: 8rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgb(10, 32, 143);
+    color: white;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
+    color: rgba(10, 32, 143);
+    border: 2px solid rgb(10, 32, 143);
+    background: rgba(235, 235, 240, 0.548);
+}
+
+button {
+    background: rgba(235, 235, 240, 0.548);
+    border: 2px solid rgb(10, 32, 143);
+    color: rgb(10, 32, 143);
+}
+
+button:hover {
+    cursor: pointer;
+    color: white;
+    border: 2px solid white;
+    background-color: rgb(10, 32, 143);
+}
+

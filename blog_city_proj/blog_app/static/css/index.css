@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* outline: 1px dotted rgb(234, 0, 255); */
+}
+
+body { 
+    min-height:100%;
+    background-image: url("/static/img/city.jpg");
+    background-size:cover;
+}
+.wrapper-index {
+    margin-top: 95px;
+    font-size: 2.5rem;
+
+}
+
+.welcome-index {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    font-size: 6rem;
+    font-family: 'ZCOOL KuaiLe', cursive;
+}
+
+.about-cards-main {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    margin-top: 135px;
+    
+}
+
+.cards { 
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid rgba(10, 32, 143,.5);
+    border-radius: 10px;
+    height: 17rem;
+    width: 28rem;
+    background-color: rgba(245, 245, 245, 0.575);
+    color: rgb(10, 32, 143);
+    font-size: 20px;
+    padding: 5px 10px;
+}
+

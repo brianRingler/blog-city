@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/blog_footer.css' %}" />
+    <title>Blog About</title>
+{% endblock head %} 
+
+
+{% block content %}
+
+<div class="wrapper-blog">  
+    <div class="left-side-bar">
+        <form action="/add-topics/" method="POST" name="left-side-bar-topics-nm">    
+            <h4>Blog Topics</h4>
+            <p>Machine Learning</p>
+            <p>Learning on The Tube</p>
+            <p>C++</p>
+            <p>JavaScript</p>
+            <p>Python</p>
+            <p>Java</p>
+            <p>Pandas</p>
+            <p>Django</p>
+            <p>Blockchain</p>
+            <div class=left-frm-controls>
+                <label for="add-topic">Add Topic</label>
+                <input type="text" id="add-topic" name="topic-nm">
+                <input type="submit" name="submit-topic-btn" value="Submit">
+            </div>
+        </form> 
+    </div>
+
+    <div class="blog-sec">
+        <h1 class="welcome-blog">Lets Blog</h1>
+        <div class="post">
+            <div class="posts">
+                <p>Posts</p>
+                <div class="comments">
+                    <p>Comments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-side-bar">
+        <h4>Crypto Currency</h4>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+        <p>TBD</p>
+    </div>
+
+</div>
+
+{% endblock %}

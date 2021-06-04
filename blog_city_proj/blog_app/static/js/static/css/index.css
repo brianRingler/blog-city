@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* outline: 1px dotted rgb(234, 0, 255); */
+}
+
+.wrapper-index {
+    margin-top: 95px;
+    font-size: 2.5rem;
+}
+
+.welcome-index {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+
+.about-cards-main {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    margin-top: 135px;
+}
+
+.cards { 
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(10, 32, 143,.5);
+    border-radius: 5px;
+    height: 15rem;
+    width: 25rem;
+    background-color: whitesmoke;
+    color: rgb(10, 32, 143);
+    font-size: 21px;
+    padding: 5px 5px;
+}
+

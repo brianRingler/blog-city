@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* outline: 1px dotted rgb(234, 0, 255); */
+}
+
+/* Error message from Django*/
+.error-msgs {
+  position: absolute;
+  top: 200px;
+  right: 350px;
+}
+
+.error-msgs > li {
+  background-color: white;
+  padding: 10px 10px;
+  color: red;
+}
+/* end error messages*/
+.blink {
+    animation: blinker 4s linear infinite;
+    margin-left: 350px;
+    color: red;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  #password-email-login-err {
+    margin-right: 5rem;
+  }
+/* end error messages*/
+
+form {
+    margin-top: 25px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+h1  {
+    margin: 25px 0 20px 0;
+    font-size: 35px;
+}
+
+input { 
+    margin-left: 20px;
+}
+
+#log-email{margin-left: 65px;}
