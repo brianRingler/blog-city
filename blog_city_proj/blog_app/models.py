@@ -87,13 +87,17 @@ class ValidationManger(models.Manager):
         return errors
 
     def validation_topic(self, post_data):
-        '''Ensure the new topic is unique'''
+        '''Ensure the new topic is unique.'''
         errors = {}
         new_topic = post_data['topic-nm']
-        if new_topic in Topic.objects.filter(topic=new_topic):
-            errors['topic-nm'] = f'{new_topic} is already a topic. Unique topics only'
-        return errors
+        all_topics = Topic.objects.filter(topic=new_topic)
 
+        for topic in all_topics:
+            if topic.topic == new_topic:
+                errors['topic-nm'] = f'{new_topic} is already a topic. Unique topics only'
+                return errors
+            else:
+                return errors
 
 class User(models.Model):
     first_name = models.CharField(max_length=25, null=False)
@@ -150,7 +154,7 @@ class Topic(models.Model):
     objects = ValidationManger()
 
     def __str__(self):
-        return f'{self.user}, {self.topic}'
+        return f'{self.user}, | {self.id}, {self.topic}'
 
 
 class Post(models.Model):
@@ -161,7 +165,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}, {self.post}, {self.topic}'
+        return f'{self.user}, | {self.id}, {self.post}, {self.topic}'
 
 
 class Comment(models.Model):

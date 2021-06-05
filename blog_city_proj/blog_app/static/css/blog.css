@@ -8,24 +8,18 @@
 /* Error message from Django*/
 .error-msgs {
     position: absolute;
-    top: 65px;
-    left: 45px;
+    top: 250px;
+    left: 400px;
+    font-size: 1.25rem;
   }
   
   .error-msgs > li {
     background-color: white;
     padding: 10px 10px;
     color: red;
+    animation: blinker 6s linear infinite;
   }
- 
-  .blink {
-      animation: blinker 4s linear infinite;
-      margin-left: 350px;
-      color: red;
-      font-weight: bold;
-      font-size: 15px;
-    }
-    
+     
     @keyframes blinker {
       50% {
         opacity: 0;
@@ -48,6 +42,7 @@ body {
     -webkit-animation-name: changeBackground;
     -webkit-animation-duration: 300s;
     -webkit-box-direction: alternate;
+    -webkit-background-size: cover;
     animation-iteration-count: infinite;
 }
 

@@ -18,13 +18,12 @@ def index_view(request):
 
 
 def blog_view(request):
-
     topic = request.session['topic_selected'] = False
     context = {
         'topics' : Topic.objects.all(),
         'topic_selected' : topic,
     }
-
+    print(context)
     return render(request, 'blog.html', context)
 
 
@@ -204,6 +203,10 @@ def add_topic(request):
     Check if there is an active user to prevent error if not active user '''
     if request.method == 'POST' and request.session['logged_in'] == True:
         errors = Topic.objects.validation_topic(request.POST)
+        if errors == None:
+            '''if no Topics errors is None. will cause error when length is checked. Set to empty dictionary'''
+            errors = {}
+
         if len(errors) > 0:
             for k, v in errors.items():
                 messages.error(request, v)   
@@ -219,18 +222,74 @@ def add_topic(request):
     # should not happen    
     return redirect('/blog-about')
 
-def blog_about_topic(request, topic_str):
+
+def blog_about_topic(request, topic_id):
 
     topic = request.session['topic_selected'] = True
 
-    posts_by_topic = Post.objects.filter(topic__topic=topic_str).order_by('created_at')
+    
+    # posts_by_topic = Post.objects.filter(topic__topic__id=topic_id).order_by('created_at')
 
-    comments_by_post = Comment.objects.filter(topic__topic=topic_str).order_by('-created_at')
+    # comments_by_post = Comment.objects.filter(post__post__id=).order_by('-created_at')
 
     context = {
-        'selected_topic' : Topic.objects.get(topic=topic_str),
+        'selected_topic' : Topic.objects.get(id=topic_id),
         'topic_selected' : topic,
-        'posts_by_topic' : posts_by_topic,
-        'comments_by_post' : comments_by_post
+        'topics' : Topic.objects.all(),
+        # 'posts_by_topic' : posts_by_topic,
+        # 'comments_by_post' : comments_by_post
     }
     return render(request, 'blog.html', context)
+
+
+def add_post(request):
+    '''Add a Post to db. Hidden input contains the active Topic id 
+    that the Post will be associated with '''
+
+    if request.method == 'POST' and request.session['logged_in'] == True:
+        user_id = request.session['active_user_id']
+        active_user = User.objects.get(id=user_id)
+
+        topic_id = request.POST.get('active-topic-id-nm', None)
+        active_topic = Topic.objects.get(id=topic_id)
+
+        new_post = Post.objects.create(
+            post = request.POST.get('add-post-msg-nm', None),
+            user = active_user,
+            topic = active_topic
+        )
+
+        new_post.save()
+
+        url = f'/blog-about/topic/{topic_id}'
+        return redirect(url)
+    # if not POST or logged-in redirect blog-about    
+    return redirect('/blog-about')
+
+
+def add_comment(request):
+    '''Add a Comment to db. '''
+
+    if request.method == 'POST' and request.session['logged_in'] == True:
+        user_id = request.session['active_user_id']
+        active_user = User.objects.get(id=user_id)
+
+        topic_id = request.POST.get('active-topic-id-nm', None)
+        active_topic = Topic.objects.get(id=topic_id)
+
+        post_id = request.POST.get('active-post-id-nm', None)
+        active_post = Post.objects.get(id=post_id)
+
+        new_comment = Post.objects.create(
+            comment = request.POST.get('add-comment-msg-nm', None),
+            user = active_user,
+            post = active_post,
+            topic = active_topic
+        )
+
+        new_comment.save()
+
+        url = f'/blog-about/topic/{topic_id}'
+        return redirect(url)
+    # if not POST or logged-in redirect blog-about    
+    return redirect('/blog-about')
