@@ -305,3 +305,7 @@ input[name="add-post-submit"] {
 input[name="remove-comment-submit"] {
     margin-left: 315px;
 }
+
+input[name="add-comment-submit"] {
+    margin: 0 0 45px 685px;
+}

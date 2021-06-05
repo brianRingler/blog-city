@@ -23,7 +23,7 @@ def blog_view(request):
         'topics' : Topic.objects.all(),
         'topic_selected' : topic,
     }
-    print(context)
+    
     return render(request, 'blog.html', context)
 
 
@@ -228,7 +228,9 @@ def blog_about_topic(request, topic_id):
     topic = request.session['topic_selected'] = True
 
     
-    # posts_by_topic = Post.objects.filter(topic__topic__id=topic_id).order_by('created_at')
+    posts_by_topic = Post.objects.filter(topic__id=topic_id).order_by('created_at')
+
+    print(posts_by_topic)
 
     # comments_by_post = Comment.objects.filter(post__post__id=).order_by('-created_at')
 
@@ -236,7 +238,7 @@ def blog_about_topic(request, topic_id):
         'selected_topic' : Topic.objects.get(id=topic_id),
         'topic_selected' : topic,
         'topics' : Topic.objects.all(),
-        # 'posts_by_topic' : posts_by_topic,
+        'posts_by_topic' : posts_by_topic,
         # 'comments_by_post' : comments_by_post
     }
     return render(request, 'blog.html', context)

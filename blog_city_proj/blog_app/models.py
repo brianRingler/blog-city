@@ -154,7 +154,7 @@ class Topic(models.Model):
     objects = ValidationManger()
 
     def __str__(self):
-        return f'{self.user}, | {self.id}, {self.topic}'
+        return f'User: {self.user.id}, | Topic: {self.id}, {self.topic}'
 
 
 class Post(models.Model):
@@ -165,7 +165,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}, | {self.id}, {self.post}, {self.topic}'
+        return f'User: {self.user.id}, | Post: {self.id}, {self.post}, Topic: {self.topic}'
 
 
 class Comment(models.Model):
@@ -177,6 +177,6 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}, {self.comment}, {self.post}, {self.topic}'
+        return f'User: {self.user.id}, Comment: {self.comment}, Post: {self.post}, Topic: {self.topic}'
 
 
