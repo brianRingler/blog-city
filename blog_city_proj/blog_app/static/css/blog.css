@@ -64,7 +64,6 @@ body {
     color: rgb(10, 32, 143);
 	-webkit-text-stroke: 3px rgb(10, 32, 143);
 	-webkit-text-fill-color: whitesmoke;
-
 }
 
 
@@ -90,6 +89,10 @@ body {
     margin-top: 5rem;
 }
 
+form[name="add-comment-frm"] {
+    margin-bottom: 100px;
+}
+
 form[name="left-side-bar-topics-nm"] {
     display: flex;
     flex-flow: column;
@@ -98,7 +101,7 @@ form[name="left-side-bar-topics-nm"] {
 
 label {
     font-family: 'ZCOOL KuaiLe', cursive;
-    font-size: 2.5rem;
+    font-size: 2.0rem;
     margin-bottom: 15px;
 }
 
@@ -148,6 +151,34 @@ form[name="left-side-bar-topics-nm"] > p:hover {
     font-size: 19px;
     color: white;
     padding: 10px 10px;
+
+}
+
+.right-side-bar > h4 {
+    margin-left: 13px;
+}
+
+.ticker-wrapper {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateX(100%);
+    animation: tickMoving 300s linear infinite;
+}
+
+.ticker-wrapper p {
+    margin-bottom: 20px;
+
+}
+
+@keyframes tickMoving {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
 }
 
 /* Input fields */
@@ -243,14 +274,14 @@ input[type="submit"]:hover {
 
 .poster-name,
 .post-date {
-    font-size: 1.75rem;
+    font-size: 1.45rem;
     font-weight: bold;
     margin-left: 20px;
 }
 
 .comment-name,
 .comment-date {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: bold;
     padding: 10px 10px;
 }
@@ -290,7 +321,7 @@ input[name="add-comment-submit"]:hover
 }
 
 label {
-    font-size: 2.5rem;
+    font-size: 2.0rem;
 }
 
 textarea {
@@ -303,7 +334,14 @@ input[name="add-post-submit"] {
 }
 
 input[name="remove-comment-submit"] {
-    margin-left: 315px;
+    margin-left: 100px;
+}
+
+.comment-header {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    border-bottom: rgb(10, 32, 143);
 }
 
 input[name="add-comment-submit"] {

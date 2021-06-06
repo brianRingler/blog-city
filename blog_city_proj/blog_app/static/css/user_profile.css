@@ -6,15 +6,15 @@
 }
 
 h1 {
-    font-size: 1.5rem;
-    margin-left: 8px;
+    font-size: 2rem;
+    margin-left: 15px;
 }
 
 .main-wrapper {
     background: rgba(204,230,255,1);
     min-height: 100vh; 
     display: grid;
-    grid-template-columns: 225px minmax(450px, 750px);
+    grid-template-columns: 275px minmax(450px, 750px);
     grid-template-rows: 65px auto auto  auto;
     grid-template-areas:
             "lsb   sec1   sec1"
@@ -54,7 +54,6 @@ h1 {
 /* Start General Section sec-1 */
 .sec-1 {
     grid-area: sec1;
-    margin-bottom: 15px;
     margin-top: 0.5rem;
 }
 
@@ -77,8 +76,10 @@ form[name="general-frm"] {
 }
 
 /* Align input sections sec-1 general */
-#user-dob {margin-left: 27px; }
-#user-state {margin-left: 63px; }
+#first-name {margin-left: 40px; }
+#last-name {margin-left: 40px; }
+#user-dob {margin-left: 75px; }
+#display-name {margin-left: 15px; }
 
 .gender-radio {
     display: flex;
@@ -95,20 +96,21 @@ form[name="general-frm"] {
     margin-left: 20px;
 }
 
-#email {margin-left: 85px; }
+
 input[type="file"] {margin-left: 7px;}
 #description {margin-left: 35px;}
-
-.register-details {
-    display: flex;
-    flex-flow: row;
-    align-items: flex-start;
-}
 
 /* prevent user from accessing email */
 #user-email {
     user-select: none;
     color: #787878;
+    margin-left: 85px;
+}
+
+.register-details {
+    display: flex;
+    flex-flow: row;
+    align-items: flex-start;
 }
 
 
@@ -137,12 +139,13 @@ form[name="contact-frm"] {
 #handy-phone-num {margin-left: 15px;}
 #office-phone-num {margin-left: 29px;}
 #office-phone-ext {margin-left: 65px;}
-#contact-url {margin-left: 10px;}
-#email {margin-left: 75px;}
+#contact-url {margin-left: 35px;}
+
 
 /* Start Address Section sec-3 */
 .sec-3 {
     grid-area: sec3;
+    padding-bottom: 105px;
 }
 
 form[name="address-frm"] {
@@ -162,12 +165,12 @@ form[name="address-frm"] {
   
 }
 
-#str-num { margin-left: 10px;}
-#str-name { margin-left: 30px;}
+#str-num { margin-left: 15px;}
+#str-name { margin-left: 40px;}
 #po-box{ margin-left: 35px;}
-#address-state { margin-left: 40px;}
-#address-city { margin-left: 55px;}
-#zip-code { margin-left: 10px;}
+#address-state { margin-left: 50px;}
+#address-city { margin-left: 70px;}
+#zip-code { margin-left: 12px;}
 
 .general-btns,
 .contact-btns,

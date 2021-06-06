@@ -4,6 +4,9 @@ from .models import User, ContactInfo, Address, Post, Comment, Topic
 from django.contrib import messages
 from django.http import JsonResponse
 import bcrypt
+from .CurrencyAPI import current_market_prices
+# from timeloop import TimeLoop
+# from datetime import timedelta
 
 def index_view(request):
     try:
@@ -18,10 +21,19 @@ def index_view(request):
 
 
 def blog_view(request):
+
+    # Crypto indicators 
+    symbols = 'BTC,ETH,ADA,DOT,UNI,LTC,LINK,VET,MINA,SWAP,RFOX,ATOM,CRV,MATIC,GUSD'
+    symbol_list = ['BTC','ETH','ADA','DOT','UNI','LTC','LINK','VET','MINA','SWAP','RFOX','ATOM','CRV','MATIC','GUSD']
+
+    # tl = TimeLoop
+    # @tl.job(interval=timedelta(hours=1))       
+
     topic = request.session['topic_selected'] = False
     context = {
         'topics' : Topic.objects.all(),
         'topic_selected' : topic,
+        'prices': current_market_prices(symbols, symbol_list)
     }
     
     return render(request, 'blog.html', context)
@@ -117,6 +129,16 @@ def profile_view(request):
     if request.method == 'POST':
         # Updating User data skip email. Do not allow user to change
         
+        '''is user does not add a profile image. When update selected 
+        it will cause an error and cause profile image to be empty'''
+        
+        profile_pic = request.POST.get('user-avatar-nm',None)
+        active_id = request.session['active_user_id']
+
+        if profile_pic == None or profile_pic == '':
+            user = User.objects.get(id=active_id)
+            profile_pic = user.picture
+
         User.objects.update_or_create(
             id=request.session['active_user_id'],
             defaults = {
@@ -125,7 +147,7 @@ def profile_view(request):
                 'dob': request.POST.get('user-dob-nm',None),
                 # 'email': request.POST.get('user-email-nm',None),
                 'display_name': request.POST.get('user-display-nm',None),
-                'picture': request.POST.get('user-avatar-nm',None),
+                'picture': profile_pic,
                 'gender': request.POST.get('user-gender-nm',None),
                 'description': request.POST.get('user-desc-nm',None),   
             }
@@ -182,11 +204,16 @@ def contact_update(request):
 def profile_update(request):
         # should always be a POST but add just in-case
     if request.method == 'POST': 
+        '''PO box is optional. If user does not add make it 0 to prevent 
+        and error. '''
+        po_box= request.POST.get('po-box-nm',None)
+        if po_box == None or po_box == '':
+            po_box = 0
 
         Address.objects.filter(user_id=request.session['active_user_id']).update(
             street_number= request.POST.get('street-number-nm',None),
             street_name= request.POST.get('street-name-nm',None),
-            po_box= request.POST.get('po-box-nm',None),
+            po_box= po_box,
             state= request.POST.get('states-nm',None),
             city= request.POST.get('address-city-nm',None),
             zip_code= request.POST.get('zip-address-nm',None),
@@ -224,23 +251,23 @@ def add_topic(request):
 
 
 def blog_about_topic(request, topic_id):
+    
+    # Crypto indicators 
+    symbols = 'BTC,ETH,ADA,DOT,UNI,LTC,LINK,VET,MINA,SWAP,RFOX,ATOM,CRV,MATIC,GUSD'
+    symbol_list = ['BTC','ETH','ADA','DOT','UNI','LTC','LINK','VET','MINA','SWAP','RFOX','ATOM','CRV','MATIC','GUSD']
 
     topic = request.session['topic_selected'] = True
 
-    
     posts_by_topic = Post.objects.filter(topic__id=topic_id).order_by('created_at')
-
-    print(posts_by_topic)
-
-    # comments_by_post = Comment.objects.filter(post__post__id=).order_by('-created_at')
 
     context = {
         'selected_topic' : Topic.objects.get(id=topic_id),
         'topic_selected' : topic,
         'topics' : Topic.objects.all(),
         'posts_by_topic' : posts_by_topic,
-        # 'comments_by_post' : comments_by_post
+        'prices': current_market_prices(symbols, symbol_list)
     }
+
     return render(request, 'blog.html', context)
 
 
@@ -276,13 +303,16 @@ def add_comment(request):
         user_id = request.session['active_user_id']
         active_user = User.objects.get(id=user_id)
 
-        topic_id = request.POST.get('active-topic-id-nm', None)
-        active_topic = Topic.objects.get(id=topic_id)
-
         post_id = request.POST.get('active-post-id-nm', None)
         active_post = Post.objects.get(id=post_id)
+        print(f'Active Post >> {active_post}')
 
-        new_comment = Post.objects.create(
+        topic_id = request.POST.get('active-topic-nm', None)
+        print(topic_id)
+        active_topic = Topic.objects.get(id=topic_id)
+        print(active_topic)
+
+        new_comment = Comment.objects.create(
             comment = request.POST.get('add-comment-msg-nm', None),
             user = active_user,
             post = active_post,

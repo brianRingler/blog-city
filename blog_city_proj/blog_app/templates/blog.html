@@ -23,7 +23,7 @@
             {% csrf_token %}   
             <h4>Blog Topics</h4>
             {% for topic in topics %}
-                <p><a href="topic/{{ topic.id }}">{{ topic.topic }}</a></p>
+              <p><a href="/blog-about/topic/{{ topic.id }}">{{ topic.topic }}</a></p>
             {% endfor %}
             <div class=left-frm-controls>
                 <label for="add-topic">Add Topic</label>
@@ -53,6 +53,7 @@
                         <div class="post-header">
                             <p class="post-name-date">
                                 <span class="poster-name">
+                                    Post by: 
                                     {{ posts.user.first_name }} 
                                     {{ posts.user.first_name}}</span>
                                 <span class="post-date">{{ posts.created_at }}</span>
@@ -61,14 +62,22 @@
                         </div>
                         
                         <!-- All comments related to POST -->
-                        {% for comment in comments_by_post %}
+                        {% for comment in posts.comment_posts.all %}
                             <div class="msg-comment">
-                                <p class="comment-name-date">
-                                    <span class="comment-name">{{ comment.user.first_name }} {{ comment.user.last_name}}</span>
-                                    <span class="comment-date">{{ comment.created_at}}</span>
+                                <div class="comment-header">
+                                    <p class="comment-name-date">
+                                        <span class="comment-name">
+                                            Comment by:
+                                            {{ comment.user.first_name }} 
+                                            {{ comment.user.last_name}}
+                                        </span>
+                                        <span class="comment-date">
+                                            {{ comment.created_at}}
+                                        </span>
+                                    </p>
                                     <input type="submit" name="remove-comment-submit" value="Remove">
-                                </p>
-                                <p class="comment-text"> comment.comment </p>
+                                </div>
+                                <p class="comment-text">{{ comment.comment }}</p>
                             </div>
                         {% endfor %}
                     </form> 
@@ -76,6 +85,7 @@
                         <!-- Add New Comment  -->
                         {% csrf_token %}
                         <input type="hidden" name="active-post-id-nm" value="{{ posts.id}}">
+                        <input type="hidden" name="active-topic-nm" value="{{ selected_topic.id}}">
                         <div class="comment-msg">
                             <label for="add-comment-msg">Add a Comment</label>
                             <textarea name="add-comment-msg-nm" id="add-comment-msg" cols="30" rows="10"></textarea>
@@ -91,17 +101,26 @@
     </div>
 
     <div class="right-side-bar">
-        <h4>Crypto Currency</h4>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
-        <p>TBD</p>
+        <h4>Crypto Pricing</h4>
+        <div class="ticker-wrapper">
+        {% for price in prices %}    
+            <p>BTC - {{ prices.BTC}}</p>
+            <p>ETH - {{ prices.ETH}}</p>
+            <p>ADA - {{ prices.ADA }}</p>
+            <p>DOT - {{ prices.DOT }}</p>
+            <p>UNI - {{ prices.UNI }}</p>
+            <p>LTC - {{ prices.LTC }}</p>
+            <p>LINK - {{ prices.LINK }}</p>
+            <p>VET - {{ prices.VET }}</p>
+            <p>MINA - {{ prices.MINA }}</p>
+            <p>SWAP - {{ prices.SWAP }}</p>
+            <p>RFOX - {{ prices.RROX }}</p>
+            <p>ATOM - {{ prices.ATOM }}</p>
+            <p>CRV - {{ prices.CRV }}</p>
+            <p>MATIC - {{ prices.MATIC }}</p>
+            <p>GUSD - {{ prices.GUSD }}</p>
+        {% endfor %}
+        </div>
     </div>
 
 </div>
