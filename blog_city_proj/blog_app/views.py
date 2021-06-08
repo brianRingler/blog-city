@@ -3,10 +3,14 @@ from django.utils.translation import activate
 from .models import User, ContactInfo, Address, Post, Comment, Topic
 from django.contrib import messages
 from django.http import JsonResponse
+
+import pytz
 import bcrypt
 from .CurrencyAPI import current_market_prices
-# from timeloop import TimeLoop
-# from datetime import timedelta
+
+from datetime import datetime
+from django.utils.timezone import is_aware, make_aware
+
 
 def index_view(request):
     try:
@@ -39,6 +43,38 @@ def blog_view(request):
     return render(request, 'blog.html', context)
 
 
+def time_zone():
+    '''Allow the user to select their time  zone.'''
+    timezone_list = []
+    # from pytz timeszones remove the following 
+    remove_2 = ['GB', 'NZ']
+    remove_3 = ['EET','EST','ETC','GMT','HST','WET',
+                'UCT', 'UTC', 'MET','MST','PRC', 'ROC','ROK', 'CET']
+    remove_4 = ['W-SU', 'W-SU']
+    remove_5 = ['GMT+0', 'GMT-0']
+    remove_7 = ['MST7MDT', 'NZ-CHAT', 'GB-Eire', 'PST8PDT', 'EST5EDT', 'CST6CDT']
+
+    idx = 1
+    for tz in pytz.all_timezones:
+        if tz[0:4] == 'Etc/':
+            pass
+        elif tz[0:2] in remove_2 and len(tz) == 2:
+            pass
+        elif tz[0:3] in remove_3 and len(tz) == 3:
+            pass
+        elif tz[0:4] in remove_4 and len(tz) == 4 :
+            pass
+        elif tz[0:5] in remove_5 and len(tz) == 5 :
+            pass
+        elif tz[0:7] in remove_7 and len(tz) == 7:
+            pass
+        else:
+            timezone_list.append((idx,tz))
+            idx += 1
+
+    return timezone_list
+
+
 def register_view(request):
 
     if request.method == 'POST':
@@ -59,6 +95,7 @@ def register_view(request):
             last_name=request.POST.get('reg-last-nm',None),
             dob=request.POST.get('reg-dob-nm',None),
             email=request.POST.get('reg-email-nm',None),
+            timezone=request.POST.get('time-zone-nm', None),
             picture='default-img.jpg',
             password=password_hash,
         )
@@ -89,7 +126,11 @@ def register_view(request):
 
         return render(request, 'login.html')
 
-    return render(request, 'register.html')
+    time_zones = time_zone()
+    context = {
+        'time_zones' : time_zones
+    }
+    return render(request, 'register.html', context)
 
 
 def login_view(request):   
@@ -145,6 +186,7 @@ def profile_view(request):
                 'first_name': request.POST.get('user-first-nm',None),
                 'last_name': request.POST.get('user-last-nm',None),
                 'dob': request.POST.get('user-dob-nm',None),
+                'timezone':request.POST.get('time-zone-nm', None),
                 # 'email': request.POST.get('user-email-nm',None),
                 'display_name': request.POST.get('user-display-nm',None),
                 'picture': profile_pic,
@@ -154,19 +196,19 @@ def profile_view(request):
         )
 
         return redirect('/profile') 
-
+    
     active_id = request.session['active_user_id']
+    time_zones = time_zone()
+
     context = {
         'general' : User.objects.get(id=active_id),
         'contact' : ContactInfo.objects.get(user_id=active_id),
         'address' : Address.objects.get(user_id=active_id),
-        'date' : str(User.objects.get(id=active_id).dob)
+        'date' : str(User.objects.get(id=active_id).dob),
+        'time_zones' : time_zones
     }
     
     user = User.objects.get(id=active_id)
-    print('-*-*-*-*-*-*-*-*-')
-    print(user.picture)
-    print(user.picture.url)
     
     return render(request, 'user_profile.html', context)
 
@@ -260,6 +302,8 @@ def blog_about_topic(request, topic_id):
 
     posts_by_topic = Post.objects.filter(topic__id=topic_id).order_by('created_at')
 
+
+
     context = {
         'selected_topic' : Topic.objects.get(id=topic_id),
         'topic_selected' : topic,
@@ -325,3 +369,58 @@ def add_comment(request):
         return redirect(url)
     # if not POST or logged-in redirect blog-about    
     return redirect('/blog-about')
+
+
+def delete_comment(request):
+    
+    topic_id = request.POST.get('hidden-topic-id-nm', None)
+    comment_id = request.POST.get('hidden-com-id-nm', None)
+    user_id = request.POST.get('hidden-user-id-nm', None)
+    comm_created_at = request.POST.get('com-created-at-nm', None)
+    active_user = request.session['active_user_id']
+
+    # What is the active_user time zone
+    active_user = User.objects.get(id=request.session['active_user_id'])
+    active_user_tz = active_user.timezone
+    print(f'Active User TZ => {active_user_tz}')
+    print(f'TZ Type => {type(active_user_tz)}')
+
+    # adjust lowercase am/pm to uppercase 
+    converted_time = comm_created_at.replace('a.m.', 'AM').replace('p.m.', 'PM')
+    print(f'Check converted time => {converted_time}')
+
+    # convert from string to datetime object
+    comment_datetime = datetime.strptime(converted_time, '%B %d, %Y, %I:%M %p')
+    print(f'Check if is Aware: {is_aware(comment_datetime)}')
+
+    # time zone cannot be type string
+    user_timezone = pytz.timezone(active_user_tz)
+    print(f'This is the user timezone => {user_timezone}')
+    print(f'User TZ Type converted correctly => {type(user_timezone)}')
+
+    aware_comment_dt = make_aware(comment_datetime, timezone=user_timezone, is_dst=None)
+
+    print()
+    print('Still returning the UTC time. I created this at 5PM EST')
+    print(aware_comment_dt)
+    print('---------------')
+
+    if request.method == 'POST' and request.session['logged_in'] == True:
+        ''' Allow the user to delete the comment only if they created it'''
+
+        if user_id == str(active_user):
+            '''Active user is user that created comment they can delete'''
+            comment_to_delete = Comment.objects.get(id=comment_id)
+            comment_to_delete.delete()
+
+            url = f'/blog-about/topic/{topic_id}'
+            return redirect(url)
+        else:
+            # Comment was not created by user selecting remove
+            
+            url = f'/blog-about/topic/{topic_id}'
+            return redirect(url)
+
+    # Not a POST
+    url = f'/blog-about/topic/{topic_id}'
+    return render(url)

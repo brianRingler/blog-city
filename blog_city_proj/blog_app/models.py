@@ -103,6 +103,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=25, null=False)
     last_name = models.CharField(max_length=25, null=False)
     dob = models.DateField(null=False)
+    timezone = models.CharField(max_length=45, default='US/Eastern', null=False)
     email = models.EmailField(max_length=75, unique=True, null=False)
     display_name = models.CharField(max_length=255, null=True)
     # any User instance will have users picture

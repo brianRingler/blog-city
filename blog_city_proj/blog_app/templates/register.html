@@ -34,6 +34,16 @@
         </div>
 
         <div>
+            <label for="time-zone">State</label>
+                <select name="time-zone-nm" class="states" id="time-zone" required>
+                    <option value="0">Select Time Zone</option>
+                    {% for idx, tz in time_zones %}
+                        <option value="{{ idx }}">{{ tz }}</option>
+                    {% endfor %}
+                </select>
+        </div>
+
+        <div>
             <label for="reg-email">Email</label>
             <input type="email" name="reg-email-nm" id="reg-email" placeholder="my-name@coolmail.com">
         </div>

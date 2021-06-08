@@ -60,9 +60,11 @@
                             </p>
                             <P class="post-text">{{ posts.post }}</P>
                         </div>
-                        
+                </form>        
                         <!-- All comments related to POST -->
                         {% for comment in posts.comment_posts.all %}
+                        <form action="/delete/" method="POST" name="delete-comment-frm">
+                            {% csrf_token %}
                             <div class="msg-comment">
                                 <div class="comment-header">
                                     <p class="comment-name-date">
@@ -76,11 +78,16 @@
                                         </span>
                                     </p>
                                     <input type="submit" name="remove-comment-submit" value="Remove">
+                                    <input type="hidden" name="hidden-com-id-nm" value="{{ comment.id }}">
+                                    <input type="hidden" name="hidden-topic-id-nm" value="{{ comment.topic.id }}">
+                                    <input type="hidden" name="hidden-user-id-nm" value="{{ comment.user.id }}">
+                                    <input type="hidden" name="com-created-at-nm" value="{{ comment.created_at }}">
                                 </div>
                                 <p class="comment-text">{{ comment.comment }}</p>
                             </div>
+                        </form> 
                         {% endfor %}
-                    </form> 
+                     
                     <form action="/blog-about/add-comment/" method="POST" name="add-comment-frm">
                         <!-- Add New Comment  -->
                         {% csrf_token %}
@@ -114,7 +121,7 @@
             <p>VET - {{ prices.VET }}</p>
             <p>MINA - {{ prices.MINA }}</p>
             <p>SWAP - {{ prices.SWAP }}</p>
-            <p>RFOX - {{ prices.RROX }}</p>
+            <p>RFOX - {{ prices.RFOX }}</p>
             <p>ATOM - {{ prices.ATOM }}</p>
             <p>CRV - {{ prices.CRV }}</p>
             <p>MATIC - {{ prices.MATIC }}</p>

@@ -49,6 +49,16 @@
                     <label for="display-name">Display Name</label>
                     <input type="text" name="user-display-nm" id="display-name" maxlength="50" placeholder="The name you would like displayed" value="{{ general.display_name }}" required>
                 </div>
+
+                <div>
+                    <label for="time-zone">Time Zone</label>
+                        <select name="time-zone-nm" class="states" id="time-zone" required>
+                            <option value="0">{{ general.timezone }}</option>
+                            {% for idx, tz in time_zones %}
+                                <option value="{{ tz }}">{{ tz }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
             </div>
 
             <div class="right-general">
@@ -79,7 +89,7 @@
 
                     <div class="register-details">
                         <label for="description">Description</label>
-                        <textarea id="description" name="user-desc-nm" maxlength="250" rows="8" cols="12" placeholder="Tell us a little about you in less than 250 characters">{{ general.description }}</textarea>
+                        <textarea id="description" name="user-desc-nm" maxlength="250" rows="15" cols="12" placeholder="Tell us a little about you in less than 250 characters">{{ general.description }}</textarea>
                     </div>
             </div>
         </form>
