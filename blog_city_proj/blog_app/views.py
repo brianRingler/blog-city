@@ -299,17 +299,17 @@ def blog_about_topic(request, topic_id):
     symbol_list = ['BTC','ETH','ADA','DOT','UNI','LTC','LINK','VET','MINA','SWAP','RFOX','ATOM','CRV','MATIC','GUSD']
 
     topic = request.session['topic_selected'] = True
+    active_user = User.objects.get(id=request.session['active_user_id'])
 
     posts_by_topic = Post.objects.filter(topic__id=topic_id).order_by('created_at')
-
-
 
     context = {
         'selected_topic' : Topic.objects.get(id=topic_id),
         'topic_selected' : topic,
         'topics' : Topic.objects.all(),
         'posts_by_topic' : posts_by_topic,
-        'prices': current_market_prices(symbols, symbol_list)
+        'prices': current_market_prices(symbols, symbol_list),
+        'user_time_zone' : active_user.timezone
     }
 
     return render(request, 'blog.html', context)
@@ -379,53 +379,7 @@ def delete_comment(request):
     comm_created_at = request.POST.get('com-created-at-nm', None)
     active_user = request.session['active_user_id']
 
-    # What is the active_user time zone
-    active_user = User.objects.get(id=request.session['active_user_id'])
-    active_user_tz = active_user.timezone
-    print(f'Active User TZ => {active_user_tz}')
-    print(f'TZ Type => {type(active_user_tz)}')
 
-    # adjust lowercase am/pm to uppercase 
-    converted_time = comm_created_at.replace('a.m.', 'AM').replace('p.m.', 'PM')
-    print(f'Check converted time => {converted_time}')
-
-    # convert from string to datetime object
-    comment_datetime = datetime.strptime(converted_time, '%B %d, %Y, %I:%M %p')
-    print(f'Check if is Aware: {is_aware(comment_datetime)}')
-
-    # time zone cannot be type string
-    user_timezone = pytz.timezone(active_user_tz)
-    print(f'This is the user timezone => {user_timezone}')
-    print(f'User TZ Type converted correctly => {type(user_timezone)}\n')
-
-
-    aware_comment_dt = make_aware(comment_datetime, timezone=user_timezone, is_dst=None)
-    print(f'Check if is Aware True indicates is aware => {is_aware(aware_comment_dt)}\n')
-
-    comment_local_time_tz = localtime(value=aware_comment_dt, timezone=user_timezone)
-    print('The below should be should be 5:01PM EST => Using "localtime"')
-    print(comment_local_time_tz)
-    print()
-
-    comment_local_date_tz = localdate(value=aware_comment_dt, timezone=user_timezone)
-    print('The below should be should be 5:01PM EST => Using "localdate"')
-    print(comment_local_date_tz)
-
-    print()
-    print('Still returning the UTC time. I created this at 5PM EST')
-    print(aware_comment_dt)
-    print('---------------')
-
-    print('+++WHAT DOES DJANGO NOE RETURN?+++')
-    django_date_now = now()
-    print(f'Using Django now() => {django_date_now}')
-    print(f'Is Django Date now() aware => {is_aware(django_date_now)}')
-    print('It returns UTC\n\n')
-
-    print('+++WHAT DOES DATETIME RETURN???+++')
-    python_date_now = datetime.now()
-    print(f'This is PYTHON datetime now => {python_date_now}')
-    print('Python datetime now() returns local time zone, EST.')
 
     if request.method == 'POST' and request.session['logged_in'] == True:
         ''' Allow the user to delete the comment only if they created it'''

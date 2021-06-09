@@ -2,6 +2,60 @@
 * [Time Zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 * [strftime Directives](https://strftime.org/)
 * [Date-Time Tutorial](https://www.tutorialspoint.com/How-to-convert-date-and-time-with-different-timezones-in-Python)
+* [Stack-Time Zone](https://stackoverflow.com/questions/48383549/how-to-show-local-time-in-template)
+
+    # What is the active_user time zone
+    active_user = User.objects.get(id=request.session['active_user_id'])
+    active_user_tz = active_user.timezone
+    print(f'Active User TZ => {active_user_tz}')
+    print(f'TZ Type => {type(active_user_tz)}')
+
+    # adjust lowercase am/pm to uppercase 
+    converted_time = comm_created_at.replace('a.m.', 'AM').replace('p.m.', 'PM')
+    print(f'Check converted time => {converted_time}')
+
+    # convert from string to datetime object
+    comment_datetime = datetime.strptime(converted_time, '%B %d, %Y, %I:%M %p')
+    print(f'Check if is Aware: {is_aware(comment_datetime)}')
+
+    # time zone cannot be type string
+    user_timezone = pytz.timezone(active_user_tz)
+    print(f'This is the user timezone => {user_timezone}')
+    print(f'User TZ Type converted correctly => {type(user_timezone)}\n')
+
+
+    aware_comment_dt = make_aware(comment_datetime, timezone=user_timezone, is_dst=None)
+    print(f'Check if is Aware True indicates is aware => {is_aware(aware_comment_dt)}\n')
+
+    comment_local_time_tz = localtime(value=aware_comment_dt, timezone=user_timezone)
+    print('The below should be should be 5:01PM EST => Using "localtime"')
+    print(comment_local_time_tz)
+    print()
+
+    comment_local_date_tz = localdate(value=aware_comment_dt, timezone=user_timezone)
+    print('The below should be should be 5:01PM EST => Using "localdate"')
+    print(comment_local_date_tz)
+
+    print()
+    print('Still returning the UTC time. I created this at 5PM EST')
+    print(aware_comment_dt)
+    print('---------------')
+
+    print('+++WHAT DOES DJANGO NOE RETURN?+++')
+    django_date_now = now()
+    print(f'Using Django now() => {django_date_now}')
+    print(f'Is Django Date now() aware => {is_aware(django_date_now)}')
+    print('It returns UTC\n\n')
+
+    print('+++WHAT DOES DATETIME RETURN???+++')
+    python_date_now = datetime.now()
+    print(f'This is PYTHON datetime now => {python_date_now}')
+    print('Python datetime now() returns local time zone, EST.\n\n')
+
+    print('USING PYTHON DATETIME')
+    LOCAL_TIMEZONE = datetime.now(datetime.timezone(datetime.timedelta(0))).astimezone().tzinfo
+    print('What is the local tz using astimezone().tzinfo')
+    print(LOCAL_TIMEZONE)
 
 ## Time Zone Scratch Pad
     print('----++++++++------++++++++---------')

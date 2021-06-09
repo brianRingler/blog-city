@@ -55,8 +55,12 @@
                                 <span class="poster-name">
                                     Post by: 
                                     {{ posts.user.first_name }} 
-                                    {{ posts.user.first_name}}</span>
-                                <span class="post-date">{{ posts.created_at }}</span>
+                                    {{ posts.user.first_name}}
+                                </span>
+                                {% load tz %}
+                                <span class="post-date">
+                                    {{ posts.created_at|timezone:user_time_zone}}
+                                </span>
                             </p>
                             <P class="post-text">{{ posts.post }}</P>
                         </div>
@@ -73,8 +77,9 @@
                                             {{ comment.user.first_name }} 
                                             {{ comment.user.last_name}}
                                         </span>
+                                        {% load tz %}
                                         <span class="comment-date">
-                                            {{ comment.created_at}}
+                                            {{ comment.created_at|timezone:user_time_zone}}
                                         </span>
                                     </p>
                                     <input type="submit" name="remove-comment-submit" value="Remove">
@@ -129,7 +134,6 @@
         {% endfor %}
         </div>
     </div>
-
 </div>
 
 {% endblock %}
